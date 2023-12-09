@@ -1,0 +1,112 @@
+[gd_scene load_steps=14 format=3 uid="uid://cu86po5lkuqod"]
+
+[ext_resource type="Script" path="res://Actors/ai_human_walker.gd" id="1_7loni"]
+[ext_resource type="Texture2D" uid="uid://4j18si8pj4yt" path="res://Assets/Sprites/TEMP_human_sheet.png" id="1_g5xqq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_od1xb"]
+atlas = ExtResource("1_g5xqq")
+region = Rect2(153, 0, 153, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0ixib"]
+atlas = ExtResource("1_g5xqq")
+region = Rect2(0, 400, 153, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_exv36"]
+atlas = ExtResource("1_g5xqq")
+region = Rect2(153, 400, 153, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qsaxj"]
+atlas = ExtResource("1_g5xqq")
+region = Rect2(306, 400, 153, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r05i3"]
+atlas = ExtResource("1_g5xqq")
+region = Rect2(459, 400, 153, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f58bh"]
+atlas = ExtResource("1_g5xqq")
+region = Rect2(0, 200, 153, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bytjg"]
+atlas = ExtResource("1_g5xqq")
+region = Rect2(153, 200, 153, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_niqvx"]
+atlas = ExtResource("1_g5xqq")
+region = Rect2(306, 200, 153, 200)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m2mlg"]
+atlas = ExtResource("1_g5xqq")
+region = Rect2(459, 200, 153, 200)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_sfewq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_od1xb")
+}],
+"loop": true,
+"name": &"Idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0ixib")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_exv36")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qsaxj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r05i3")
+}],
+"loop": true,
+"name": &"WalkLeft",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f58bh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bytjg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_niqvx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m2mlg")
+}],
+"loop": true,
+"name": &"WalkRight",
+"speed": 8.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_efs2c"]
+size = Vector2(7.7676, 18.2189)
+
+[node name="AiHumanWalker" type="RigidBody2D" groups=["ai_human_walker"]]
+collision_mask = 0
+gravity_scale = 0.0
+script = ExtResource("1_7loni")
+metadata/_edit_lock_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(330, 189)
+scale = Vector2(0.8, 0.8)
+sprite_frames = SubResource("SpriteFrames_sfewq")
+animation = &"WalkLeft"
+frame_progress = 0.78192
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(322, 190.5)
+scale = Vector2(13.1315, 8.7272)
+shape = SubResource("RectangleShape2D_efs2c")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(319.5, 190.75)
+scale = Vector2(6.45, 9.725)
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier2D" to="." method="_on_visible_on_screen_notifier_2d_screen_exited"]

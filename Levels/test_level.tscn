@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://b5gw8h4nvovmd"]
+
+[ext_resource type="Script" path="res://Levels/test_level.gd" id="1_4x2l4"]
+[ext_resource type="PackedScene" uid="uid://0ha4gi78gueg" path="res://Actors/player.tscn" id="1_10ous"]
+[ext_resource type="PackedScene" uid="uid://b5ghexe05o1qy" path="res://UI/hud.tscn" id="4_ma762"]
+[ext_resource type="PackedScene" uid="uid://cu86po5lkuqod" path="res://Actors/ai_human_walker.tscn" id="4_mieq1"]
+
+[sub_resource type="Curve2D" id="Curve2D_01i2r"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -41, -162, 0, 0, 0, 0, 1154, -172, 0, 0, 0, 0, 1151, 622, 0, 0, 0, 0, -36, 614, 0, 0, 0, 0, -41, -162)
+}
+point_count = 5
+
+[node name="TestLevel" type="Node2D"]
+script = ExtResource("1_4x2l4")
+m_ai = ExtResource("4_mieq1")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = 6.0
+offset_top = -3.0
+offset_right = 1574.0
+offset_bottom = 1107.0
+color = Color(0.00784314, 0.286275, 0.00784314, 1)
+
+[node name="Player1" parent="." instance=ExtResource("1_10ous")]
+m_speed = 401
+
+[node name="Player1StartPosition" type="Marker2D" parent="."]
+position = Vector2(300, 300)
+
+[node name="AiSpawnTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="AiPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_01i2r")
+
+[node name="AiSpawnLocation" type="PathFollow2D" parent="AiPath"]
+position = Vector2(-41, -162)
+rotation = -0.00836801
+
+[node name="HUD" parent="." instance=ExtResource("4_ma762")]
+
+[connection signal="timeout" from="AiSpawnTimer" to="." method="_on_ai_spawn_timer_timeout"]

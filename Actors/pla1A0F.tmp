@@ -1,0 +1,91 @@
+[gd_scene load_steps=13 format=3 uid="uid://0ha4gi78gueg"]
+
+[ext_resource type="Script" path="res://Actors/player.gd" id="1_12hdb"]
+[ext_resource type="Texture2D" uid="uid://dyrlhkjes14qj" path="res://Assets/Sprites/kona_walk_sheet.png" id="1_k154w"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gfqy5"]
+atlas = ExtResource("1_k154w")
+region = Rect2(0, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qcpfl"]
+atlas = ExtResource("1_k154w")
+region = Rect2(320, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5qyut"]
+atlas = ExtResource("1_k154w")
+region = Rect2(640, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rnme4"]
+atlas = ExtResource("1_k154w")
+region = Rect2(960, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sre6s"]
+atlas = ExtResource("1_k154w")
+region = Rect2(1280, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o8tx5"]
+atlas = ExtResource("1_k154w")
+region = Rect2(1600, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fhnfp"]
+atlas = ExtResource("1_k154w")
+region = Rect2(1920, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k8gas"]
+atlas = ExtResource("1_k154w")
+region = Rect2(2240, 0, 320, 320)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_2sax1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gfqy5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qcpfl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5qyut")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rnme4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sre6s")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o8tx5")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fhnfp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k8gas")
+}],
+"loop": true,
+"name": &"WalkLeft",
+"speed": 12.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4l3t1"]
+size = Vector2(272, 224)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_12hdb")
+metadata/_edit_lock_ = true
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(574, 244)
+scale = Vector2(0.25, 0.25)
+sprite_frames = SubResource("SpriteFrames_2sax1")
+animation = &"WalkLeft"
+frame_progress = 0.926317
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(552, 225)
+scale = Vector2(0.25, 0.25)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(570, 244)
+scale = Vector2(0.25, 0.25)
+shape = SubResource("RectangleShape2D_4l3t1")
