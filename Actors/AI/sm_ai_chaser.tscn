@@ -1,0 +1,87 @@
+[gd_scene load_steps=12 format=3 uid="uid://myctejuo43n7"]
+
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="1_v56bq"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="2_opjg4"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="3_mlrqr"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="4_dkmal"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_is_active_guard.gd" id="5_mb7uu"]
+
+[sub_resource type="Resource" id="Resource_du3jq"]
+script = ExtResource("5_mb7uu")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_wpp4m"]
+script = ExtResource("5_mb7uu")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_oted0"]
+script = ExtResource("5_mb7uu")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_1l20e"]
+script = ExtResource("5_mb7uu")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_a7hn6"]
+script = ExtResource("5_mb7uu")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_8rpw2"]
+script = ExtResource("5_mb7uu")
+state = NodePath("..")
+
+[node name="SmAiChaser" type="Node"]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("1_v56bq")
+track_in_editor = true
+
+[node name="CompoundState" type="Node" parent="StateMachine"]
+script = ExtResource("2_opjg4")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine/CompoundState"]
+script = ExtResource("3_mlrqr")
+
+[node name="To Watching" type="Node" parent="StateMachine/CompoundState/Idle"]
+script = ExtResource("4_dkmal")
+to = NodePath("../../Watching")
+event = &"IdleToWatching"
+guard = SubResource("Resource_du3jq")
+
+[node name="To Chasing" type="Node" parent="StateMachine/CompoundState/Idle"]
+script = ExtResource("4_dkmal")
+to = NodePath("../../Chasing")
+event = &"IdleToChasing"
+guard = SubResource("Resource_wpp4m")
+
+[node name="Watching" type="Node" parent="StateMachine/CompoundState"]
+script = ExtResource("3_mlrqr")
+
+[node name="To Idle" type="Node" parent="StateMachine/CompoundState/Watching"]
+script = ExtResource("4_dkmal")
+to = NodePath("../../Idle")
+event = &"WatchingToIdle"
+guard = SubResource("Resource_oted0")
+delay_seconds = 2.0
+
+[node name="To Chasing" type="Node" parent="StateMachine/CompoundState/Watching"]
+script = ExtResource("4_dkmal")
+to = NodePath("../../Chasing")
+event = &"WatchingToChasing"
+guard = SubResource("Resource_1l20e")
+
+[node name="Chasing" type="Node" parent="StateMachine/CompoundState"]
+script = ExtResource("3_mlrqr")
+
+[node name="To Idle" type="Node" parent="StateMachine/CompoundState/Chasing"]
+script = ExtResource("4_dkmal")
+to = NodePath("../../Idle")
+event = &"ChasingToIdle"
+guard = SubResource("Resource_a7hn6")
+
+[node name="To Watching" type="Node" parent="StateMachine/CompoundState/Chasing"]
+script = ExtResource("4_dkmal")
+to = NodePath("../../Watching")
+event = &"ChasingToWatching"
+guard = SubResource("Resource_8rpw2")

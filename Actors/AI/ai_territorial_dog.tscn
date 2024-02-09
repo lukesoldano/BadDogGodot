@@ -1,0 +1,51 @@
+[gd_scene load_steps=7 format=3 uid="uid://54c4053vlg67"]
+
+[ext_resource type="Script" path="res://Actors/AI/ai_territorial_dog.gd" id="1_85cth"]
+[ext_resource type="PackedScene" uid="uid://myctejuo43n7" path="res://Actors/AI/sm_ai_chaser.tscn" id="2_fvdd7"]
+[ext_resource type="Texture2D" uid="uid://6niqx4ht4iq2" path="res://Assets/Sprites/TEMP/dog.jpg" id="2_sjhrf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p884e"]
+size = Vector2(74, 77)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bj2qu"]
+radius = 491.001
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_5lpi3"]
+radius = 336.43
+
+[node name="AiTerritorialDog" type="CharacterBody2D" groups=["AI", "Dog"]]
+script = ExtResource("1_85cth")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.494118, 0, 0, 1)
+position = Vector2(-1.19209e-06, -0.499999)
+scale = Vector2(0.0822222, 0.128333)
+texture = ExtResource("2_sjhrf")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_p884e")
+
+[node name="WatchArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WatchArea"]
+shape = SubResource("CircleShape2D_bj2qu")
+debug_color = Color(0.552941, 0.564706, 0.0313726, 0.419608)
+
+[node name="ChaseArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ChaseArea"]
+shape = SubResource("CircleShape2D_5lpi3")
+debug_color = Color(0.945098, 0.215686, 0.243137, 0.419608)
+
+[node name="SmAiChaser" parent="." instance=ExtResource("2_fvdd7")]
+
+[node name="WanderTimer" type="Timer" parent="."]
+wait_time = 1.5
+one_shot = true
+
+[connection signal="body_entered" from="WatchArea" to="." method="_on_watch_area_body_entered"]
+[connection signal="body_exited" from="WatchArea" to="." method="_on_watch_area_body_exited"]
+[connection signal="body_entered" from="ChaseArea" to="." method="_on_chase_area_body_entered"]
+[connection signal="body_exited" from="ChaseArea" to="." method="_on_chase_area_body_exited"]
+[connection signal="timeout" from="WanderTimer" to="." method="_on_wander_timer_timeout"]

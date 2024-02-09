@@ -1,7 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://0ha4gi78gueg"]
+[gd_scene load_steps=14 format=3 uid="uid://0ha4gi78gueg"]
 
 [ext_resource type="Script" path="res://Actors/player.gd" id="1_12hdb"]
 [ext_resource type="Texture2D" uid="uid://dyrlhkjes14qj" path="res://Assets/Sprites/kona_walk_sheet.png" id="1_k154w"]
+[ext_resource type="PackedScene" uid="uid://bgsuqql1e2vi4" path="res://Actors/player_energy.tscn" id="3_77pfm"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gfqy5"]
 atlas = ExtResource("1_k154w")
@@ -68,24 +69,25 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_4l3t1"]
-size = Vector2(272, 224)
+size = Vector2(264, 224)
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["Dog", "Player"]]
+z_index = 100
 script = ExtResource("1_12hdb")
 metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-position = Vector2(574, 244)
 scale = Vector2(0.25, 0.25)
 sprite_frames = SubResource("SpriteFrames_2sax1")
 animation = &"WalkLeft"
-frame_progress = 0.926317
+frame_progress = 0.742579
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(552, 225)
 scale = Vector2(0.25, 0.25)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(570, 244)
+position = Vector2(-3, 0)
 scale = Vector2(0.25, 0.25)
 shape = SubResource("RectangleShape2D_4l3t1")
+
+[node name="PlayerEnergy" parent="." instance=ExtResource("3_77pfm")]

@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://bgsuqql1e2vi4"]
+
+[ext_resource type="Script" path="res://Actors/player_energy.gd" id="1_eryvx"]
+
+[node name="PlayerEnergy" type="Node"]
+script = ExtResource("1_eryvx")
+
+[node name="EnergyDecayTimer" type="Timer" parent="."]
+wait_time = 0.1
+autostart = true
+
+[connection signal="timeout" from="EnergyDecayTimer" to="." method="_on_energy_decay_timer_timeout"]

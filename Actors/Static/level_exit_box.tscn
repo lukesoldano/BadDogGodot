@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://blibo1pljnepu"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_af6br"]
+size = Vector2(187, 105)
+
+[node name="LevelExitBox" type="Area2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_af6br")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = -92.0
+offset_top = -51.0
+offset_right = 93.0
+offset_bottom = 51.0

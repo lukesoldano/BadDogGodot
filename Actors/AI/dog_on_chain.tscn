@@ -1,0 +1,103 @@
+[gd_scene load_steps=11 format=3 uid="uid://bn2liy7f2c0df"]
+
+[ext_resource type="Texture2D" uid="uid://bcr2tutdseauq" path="res://Assets/Sprites/icon.svg" id="1_cpcew"]
+[ext_resource type="Script" path="res://Actors/AI/dog_on_chain.gd" id="1_knq6q"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="2_ifu3c"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/parallel_state.gd" id="4_klt31"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="5_bg2n2"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="6_jgyuh"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="7_ltjbc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sy3oh"]
+size = Vector2(4, 14)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wc4bd"]
+size = Vector2(64, 58)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4v8s3"]
+radius = 225.02
+
+[node name="DogOnChain" type="Node2D"]
+script = ExtResource("1_knq6q")
+
+[node name="Post" type="StaticBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Post"]
+position = Vector2(0, 4.76837e-07)
+scale = Vector2(0.03125, 0.109375)
+texture = ExtResource("1_cpcew")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Post"]
+shape = SubResource("RectangleShape2D_sy3oh")
+
+[node name="Dog" type="CharacterBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="Dog"]
+scale = Vector2(0.5, 0.456)
+texture = ExtResource("1_cpcew")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dog"]
+shape = SubResource("RectangleShape2D_wc4bd")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="."]
+node_a = NodePath("../Post")
+node_b = NodePath("../Dog")
+
+[node name="GuardArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GuardArea"]
+shape = SubResource("CircleShape2D_4v8s3")
+
+[node name="StateChart" type="Node" parent="."]
+script = ExtResource("2_ifu3c")
+
+[node name="RootState" type="Node" parent="StateChart"]
+script = ExtResource("4_klt31")
+
+[node name="GuardState" type="Node" parent="StateChart/RootState"]
+script = ExtResource("5_bg2n2")
+initial_state = NodePath("OffGuardState")
+
+[node name="OffGuardState" type="Node" parent="StateChart/RootState/GuardState"]
+script = ExtResource("6_jgyuh")
+
+[node name="ToGuard" type="Node" parent="StateChart/RootState/GuardState/OffGuardState"]
+script = ExtResource("7_ltjbc")
+to = NodePath("../../OnGuardState")
+event = &"on_guard"
+
+[node name="OnGuardState" type="Node" parent="StateChart/RootState/GuardState"]
+script = ExtResource("6_jgyuh")
+
+[node name="ToOffGuard" type="Node" parent="StateChart/RootState/GuardState/OnGuardState"]
+script = ExtResource("7_ltjbc")
+to = NodePath("../../OffGuardState")
+event = &"off_guard"
+
+[node name="ChaseState" type="Node" parent="StateChart/RootState"]
+script = ExtResource("5_bg2n2")
+initial_state = NodePath("IdleState")
+
+[node name="IdleState" type="Node" parent="StateChart/RootState/ChaseState"]
+script = ExtResource("6_jgyuh")
+
+[node name="ToChasing" type="Node" parent="StateChart/RootState/ChaseState/IdleState"]
+script = ExtResource("7_ltjbc")
+to = NodePath("../../ChasingState")
+event = &"chasing"
+
+[node name="ChasingState" type="Node" parent="StateChart/RootState/ChaseState"]
+script = ExtResource("6_jgyuh")
+
+[node name="ToIdle" type="Node" parent="StateChart/RootState/ChaseState/ChasingState"]
+script = ExtResource("7_ltjbc")
+to = NodePath("../../IdleState")
+event = &"idle"
+
+[connection signal="body_entered" from="GuardArea" to="." method="_on_guard_area_body_entered"]
+[connection signal="body_exited" from="GuardArea" to="." method="_on_guard_area_body_exited"]
+[connection signal="state_entered" from="StateChart/RootState/GuardState/OffGuardState" to="." method="_on_off_guard_state_state_entered"]
+[connection signal="state_entered" from="StateChart/RootState/GuardState/OnGuardState" to="." method="_on_on_guard_state_state_entered"]
+[connection signal="state_entered" from="StateChart/RootState/ChaseState/IdleState" to="." method="_on_idle_state_state_entered"]
+[connection signal="state_entered" from="StateChart/RootState/ChaseState/ChasingState" to="." method="_on_chasing_state_state_entered"]
+[connection signal="state_processing" from="StateChart/RootState/ChaseState/ChasingState" to="." method="_on_chasing_state_state_processing"]

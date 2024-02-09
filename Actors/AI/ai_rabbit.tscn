@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3 uid="uid://blgv2d1ddf7eu"]
+
+[ext_resource type="Script" path="res://Actors/AI/ai_rabbit.gd" id="1_4nagl"]
+[ext_resource type="Texture2D" uid="uid://dhllmjhe6kfqq" path="res://Assets/Sprites/TEMP/rabbit.png" id="1_6khgd"]
+[ext_resource type="PackedScene" uid="uid://dtcc6v4hoboe0" path="res://Actors/AI/sm_ai_runner.tscn" id="2_n47sm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_db3mx"]
+size = Vector2(32, 26)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_4giha"]
+radius = 285.063
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ibf38"]
+radius = 93.0215
+
+[node name="AiRabbit" type="CharacterBody2D" groups=["AI", "Rabbit"]]
+script = ExtResource("1_4nagl")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.886275, 0.454902, 0, 1)
+position = Vector2(-1, -10.5)
+scale = Vector2(0.1875, 0.183594)
+texture = ExtResource("1_6khgd")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_db3mx")
+
+[node name="WatchArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WatchArea"]
+shape = SubResource("CircleShape2D_4giha")
+debug_color = Color(0.439216, 0.458824, 0.984314, 0.419608)
+
+[node name="EvadeArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EvadeArea"]
+shape = SubResource("CircleShape2D_ibf38")
+debug_color = Color(0.890196, 0.309804, 0.282353, 0.419608)
+
+[node name="SmAiRunner" parent="." instance=ExtResource("2_n47sm")]
+
+[node name="IdleTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
+
+[node name="WanderTimer" type="Timer" parent="."]
+one_shot = true
+
+[connection signal="body_entered" from="WatchArea" to="." method="_on_watch_area_body_entered"]
+[connection signal="body_exited" from="WatchArea" to="." method="_on_watch_area_body_exited"]
+[connection signal="timeout" from="IdleTimer" to="." method="_on_idle_timer_timeout"]
+[connection signal="timeout" from="WanderTimer" to="." method="_on_wander_timer_timeout"]

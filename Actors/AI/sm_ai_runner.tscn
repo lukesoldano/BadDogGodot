@@ -1,0 +1,128 @@
+[gd_scene load_steps=16 format=3 uid="uid://dtcc6v4hoboe0"]
+
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_chart.gd" id="1_cfcvf"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/compound_state.gd" id="2_72exv"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/atomic_state.gd" id="3_5dgyf"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/transition.gd" id="4_5beau"]
+[ext_resource type="Script" path="res://addons/godot_state_charts/state_is_active_guard.gd" id="5_5an0i"]
+
+[sub_resource type="Resource" id="Resource_ax6wm"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_nq6qy"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_is3vd"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_fn6qg"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_dbloj"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_vakht"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_gq78v"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_f14nb"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_6eeql"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[sub_resource type="Resource" id="Resource_1gi42"]
+script = ExtResource("5_5an0i")
+state = NodePath("..")
+
+[node name="SmAiRunner" type="Node2D"]
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("1_cfcvf")
+
+[node name="CompoundState" type="Node" parent="StateMachine"]
+script = ExtResource("2_72exv")
+initial_state = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine/CompoundState"]
+script = ExtResource("3_5dgyf")
+
+[node name="To Wandering" type="Node" parent="StateMachine/CompoundState/Idle"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Wandering")
+event = &"IdleToWandering"
+guard = SubResource("Resource_ax6wm")
+
+[node name="To Watching" type="Node" parent="StateMachine/CompoundState/Idle"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Watching")
+event = &"IdleToWatching"
+guard = SubResource("Resource_nq6qy")
+
+[node name="To Evading" type="Node" parent="StateMachine/CompoundState/Idle"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Evading")
+event = &"IdleToEvading"
+guard = SubResource("Resource_is3vd")
+
+[node name="Wandering" type="Node" parent="StateMachine/CompoundState"]
+script = ExtResource("3_5dgyf")
+
+[node name="To Idle" type="Node" parent="StateMachine/CompoundState/Wandering"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Idle")
+event = &"WanderingToIdle"
+guard = SubResource("Resource_fn6qg")
+
+[node name="To Watching" type="Node" parent="StateMachine/CompoundState/Wandering"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Watching")
+event = &"IdleToWatching"
+guard = SubResource("Resource_dbloj")
+
+[node name="To Evading" type="Node" parent="StateMachine/CompoundState/Wandering"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Evading")
+event = &"IdleToEvading"
+guard = SubResource("Resource_vakht")
+
+[node name="Watching" type="Node" parent="StateMachine/CompoundState"]
+script = ExtResource("3_5dgyf")
+
+[node name="To Idle" type="Node" parent="StateMachine/CompoundState/Watching"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Idle")
+event = &"WatchingToIdle"
+guard = SubResource("Resource_gq78v")
+
+[node name="To Evading" type="Node" parent="StateMachine/CompoundState/Watching"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Evading")
+event = &"WatchingToEvading"
+guard = SubResource("Resource_f14nb")
+
+[node name="Evading" type="Node" parent="StateMachine/CompoundState"]
+script = ExtResource("3_5dgyf")
+
+[node name="To Idle" type="Node" parent="StateMachine/CompoundState/Evading"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Idle")
+event = &"EvadingToIdle"
+guard = SubResource("Resource_6eeql")
+
+[node name="To Watching" type="Node" parent="StateMachine/CompoundState/Evading"]
+script = ExtResource("4_5beau")
+to = NodePath("../../Watching")
+event = &"EvadingToWatching"
+guard = SubResource("Resource_1gi42")
