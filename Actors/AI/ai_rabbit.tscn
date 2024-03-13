@@ -14,6 +14,10 @@ radius = 285.063
 radius = 93.0215
 
 [node name="AiRabbit" type="CharacterBody2D" groups=["AI", "Rabbit"]]
+collision_layer = 2
+collision_mask = 3
+motion_mode = 1
+wall_min_slide_angle = 0.0
 script = ExtResource("1_4nagl")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -25,13 +29,20 @@ texture = ExtResource("1_6khgd")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_db3mx")
 
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+debug_enabled = true
+
 [node name="WatchArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WatchArea"]
 shape = SubResource("CircleShape2D_4giha")
 debug_color = Color(0.439216, 0.458824, 0.984314, 0.419608)
 
 [node name="EvadeArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EvadeArea"]
 shape = SubResource("CircleShape2D_ibf38")
@@ -48,5 +59,7 @@ one_shot = true
 
 [connection signal="body_entered" from="WatchArea" to="." method="_on_watch_area_body_entered"]
 [connection signal="body_exited" from="WatchArea" to="." method="_on_watch_area_body_exited"]
+[connection signal="body_entered" from="EvadeArea" to="." method="_on_evade_area_body_entered"]
+[connection signal="body_exited" from="EvadeArea" to="." method="_on_evade_area_body_exited"]
 [connection signal="timeout" from="IdleTimer" to="." method="_on_idle_timer_timeout"]
 [connection signal="timeout" from="WanderTimer" to="." method="_on_wander_timer_timeout"]

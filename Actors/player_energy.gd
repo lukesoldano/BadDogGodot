@@ -1,6 +1,8 @@
-extends Node
+@icon("res://Assets/SceneIcons/EnergyBar.svg")
 
 class_name PlayerEnergy
+
+extends Node
 
 enum EnergyState
 {

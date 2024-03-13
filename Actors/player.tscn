@@ -73,6 +73,8 @@ size = Vector2(264, 224)
 
 [node name="Player" type="CharacterBody2D" groups=["Dog", "Player"]]
 z_index = 100
+collision_layer = 2
+collision_mask = 3
 script = ExtResource("1_12hdb")
 metadata/_edit_lock_ = true
 

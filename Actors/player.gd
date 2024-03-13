@@ -111,6 +111,6 @@ func _on_energy_state_updated(old_state: PlayerEnergy.EnergyState, new_state: Pl
       PlayerEnergy.EnergyState.hyper:
          self.current_max_velocity = hyper_max_velocity_ratio * self.max_velocity
       _:
-         assert("Invalid energy state provided")
+         assert(false, "Invalid energy state provided")
    
    self.energy_state_updated.emit(old_state, new_state)

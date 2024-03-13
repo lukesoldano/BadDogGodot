@@ -70,6 +70,8 @@ poop={
 2d_render/layer_2="AI"
 2d_render/layer_3="Player_Projectiles"
 2d_render/layer_4="AI_Projectiles"
+2d_physics/layer_1="Environment"
+2d_physics/layer_2="Actors"
 
 [rendering]
 

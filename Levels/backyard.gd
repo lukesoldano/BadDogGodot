@@ -2,6 +2,7 @@ extends Node2D
 
 func _ready():
    $Player.connect("energy_updated", $HUD._on_player_energy_updated)
+   $Player.connect("energy_state_updated", $HUD._on_player_energy_state_updated)
 
 func _on_level_exit_box_body_entered(body):
    

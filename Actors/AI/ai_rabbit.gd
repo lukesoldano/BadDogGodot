@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @export var wander_velocity: float = 50.0
-@export var evade_velocity: float = 600.0
+@export var evade_velocity: float = 500.0
 
 @onready var sm_ai_runner = $SmAiRunner.get_node("StateMachine")
 
@@ -15,18 +15,16 @@ func _ready():
    
    var wandering_state = self.sm_ai_runner.get_node("CompoundState/Wandering")
    wandering_state.state_entered.connect(_on_wandering_state_entered)
+   wandering_state.state_physics_processing.connect(_wandering_state_physics_processing)
    wandering_state.state_exited.connect(_on_wandering_state_exited)
    
    var watching_state = self.sm_ai_runner.get_node("CompoundState/Watching")
    watching_state.state_physics_processing.connect(_watching_state_physics_processing)
    watching_state.state_exited.connect(_on_watching_state_exited)
-   #
-   #var evading_state = self.sm_ai_runner.get_node("CompoundState/Evading")
-   #evading_state.state_physics_processing.connect(_chasing_state_physics_processing)
-   #evading_state.state_exited.connect(_on_chasing_state_exited)
-
-func _physics_process(_delta):
-   move_and_slide()
+   
+   var evading_state = self.sm_ai_runner.get_node("CompoundState/Evading")
+   evading_state.state_entered.connect(_on_evading_state_entered)
+   evading_state.state_physics_processing.connect(_evading_state_physics_processing)
    
 func _on_idle_timer_timeout():
    self.sm_ai_runner.send_event("IdleToWandering")
@@ -55,6 +53,9 @@ func _on_wandering_state_exited():
    $WanderTimer.stop()
    self.velocity = Vector2(0, 0)
    
+func _wandering_state_physics_processing(_delta):
+   move_and_slide()
+   
 func _on_watch_area_body_entered(body):
    if body.is_in_group(Constants.Groups.DOG):
          self.watch_threat_nodes.append(body)
@@ -75,3 +76,24 @@ func _watching_state_physics_processing(_delta):
    
 func _on_watching_state_exited():
    self.rotation = 0
+
+func _on_evade_area_body_entered(body):
+   if body.is_in_group(Constants.Groups.DOG):
+         self.evade_threat_nodes.append(body)
+         if self.evade_threat_nodes.size() == 1:
+            self.sm_ai_runner.send_event("WatchingToEvading")
+            
+func _on_evade_area_body_exited(body):
+   if body.is_in_group(Constants.Groups.DOG):
+      Utilities.remove_matching_node_from_array(self.watch_threat_nodes, body)
+      
+func _on_evading_state_entered():
+   #TODO: Remove - Temp logic
+   var bush = get_parent().get_node("Bush")
+   assert(bush != null)
+   if bush != null:
+      $NavigationAgent2D.target_position = bush.global_position
+   
+func _evading_state_physics_processing(_delta):
+   self.velocity = self.evade_velocity * to_local($NavigationAgent2D.get_next_path_position()).normalized()
+   move_and_slide()

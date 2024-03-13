@@ -14,6 +14,8 @@ radius = 491.001
 radius = 336.43
 
 [node name="AiTerritorialDog" type="CharacterBody2D" groups=["AI", "Dog"]]
+collision_layer = 2
+collision_mask = 3
 script = ExtResource("1_85cth")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -27,12 +29,16 @@ position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_p884e")
 
 [node name="WatchArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WatchArea"]
 shape = SubResource("CircleShape2D_bj2qu")
 debug_color = Color(0.552941, 0.564706, 0.0313726, 0.419608)
 
 [node name="ChaseArea" type="Area2D" parent="."]
+collision_layer = 2
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ChaseArea"]
 shape = SubResource("CircleShape2D_5lpi3")
