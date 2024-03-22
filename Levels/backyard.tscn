@@ -1,8 +1,9 @@
-[gd_scene load_steps=64 format=3 uid="uid://bcpninntacark"]
+[gd_scene load_steps=65 format=3 uid="uid://bcpninntacark"]
 
 [ext_resource type="PackedScene" uid="uid://b5ghexe05o1qy" path="res://UI/hud.tscn" id="1_c1pto"]
 [ext_resource type="Script" path="res://Levels/backyard.gd" id="1_lgqnk"]
 [ext_resource type="PackedScene" uid="uid://0ha4gi78gueg" path="res://Actors/player.tscn" id="1_phpc8"]
+[ext_resource type="PackedScene" uid="uid://b7t20yq0ympfp" path="res://UI/pause_menu.tscn" id="2_yo5x7"]
 [ext_resource type="PackedScene" uid="uid://dyufjubjn0bqd" path="res://Scoring/score_manager.tscn" id="3_ev14i"]
 [ext_resource type="PackedScene" uid="uid://blibo1pljnepu" path="res://Actors/Static/level_exit_box.tscn" id="3_jhu3n"]
 [ext_resource type="Texture2D" uid="uid://di4t4f7cputph" path="res://Assets/Sprites/Grass-Sheet.png" id="4_80gcu"]
@@ -713,7 +714,10 @@ navigation_layer_0/layers = 1
 sources/1 = SubResource("TileSetAtlasSource_8wolh")
 
 [node name="Backyard" type="Node2D"]
+process_mode = 1
 script = ExtResource("1_lgqnk")
+
+[node name="PauseMenu" parent="." instance=ExtResource("2_yo5x7")]
 
 [node name="HUD" parent="." instance=ExtResource("1_c1pto")]
 

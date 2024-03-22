@@ -3,7 +3,9 @@ extends CharacterBody2D
 class_name Player
 
 # Signals
-signal energy_updated(max_value: float, old_value: float, new_value: float)
+signal pause_requested()
+
+signal energy_updated(max_energy: float, old_energy: float, new_energy: float)
 signal energy_state_updated(old_state: PlayerEnergy.EnergyState, new_state: PlayerEnergy.EnergyState)
 
 # Motion members
@@ -81,6 +83,10 @@ func __handle_movement_input(delta):
    
 # Handles user input to set position and animation frames
 func __handle_input(delta):
+   
+   if Input.is_action_just_pressed("pause"):
+      self.pause_requested.emit()
+   
    ## Poops
    #if Input.is_action_just_pressed("poop") and can_poop:
       #can_poop = false

@@ -1,5 +1,7 @@
 extends Node
 
+# class_name Constants (Types)
+
 class NumericRange:
    var lower: float = 0.0
    var upper: float = 1.0

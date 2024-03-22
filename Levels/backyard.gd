@@ -1,6 +1,8 @@
 extends Node2D
 
 func _ready():
+   $Player.connect("pause_requested", $PauseMenu._on_pause_requested)
+   
    $Player.connect("energy_updated", $HUD._on_player_energy_updated)
    $Player.connect("energy_state_updated", $HUD._on_player_energy_state_updated)
 

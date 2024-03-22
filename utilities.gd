@@ -1,6 +1,8 @@
 extends Node
 
-func remove_matching_node_from_array(array: Array, node_to_remove: Node):
+# class_name Utilities (autoloaded)
+
+static func remove_matching_node_from_array(array: Array, node_to_remove: Node):
    var index = 0
    for node in array:
       assert(node is Node)
@@ -11,7 +13,7 @@ func remove_matching_node_from_array(array: Array, node_to_remove: Node):
       index += 1
 
 # Finds the global position of a node that is closest to the provided point   
-func find_closest_node_position_to_point(nodes: Array, point: Vector2) -> Vector2:
+static func find_closest_node_position_to_point(nodes: Array, point: Vector2) -> Vector2:
    var closest_distance : float = INF
    var closest_position = Vector2(0, 0)
    
