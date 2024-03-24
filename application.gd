@@ -1,6 +1,6 @@
 extends Node
 
-# class_name Application (autoloaded)
+# autoload Application
 
 var current_scene = null 
 

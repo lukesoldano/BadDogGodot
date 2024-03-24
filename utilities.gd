@@ -1,6 +1,4 @@
-extends Node
-
-# class_name Utilities (autoloaded)
+class_name Utilities
 
 static func remove_matching_node_from_array(array: Array, node_to_remove: Node):
    var index = 0

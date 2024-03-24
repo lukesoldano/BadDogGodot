@@ -75,9 +75,6 @@ size = Vector2(264, 224)
 z_index = 100
 collision_layer = 2
 script = ExtResource("1_12hdb")
-max_velocity = null
-max_acceleration = null
-friction = null
 metadata/_edit_lock_ = true
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
@@ -95,3 +92,7 @@ scale = Vector2(0.25, 0.25)
 shape = SubResource("RectangleShape2D_4l3t1")
 
 [node name="PlayerEnergy" parent="." instance=ExtResource("3_77pfm")]
+periodic_energy_drain = null
+max_energy = null
+current_energy = null
+current_energy_state = null

@@ -1,6 +1,4 @@
-extends Node
-
-# class_name Constants (Types)
+class_name Types
 
 class NumericRange:
    var lower: float = 0.0

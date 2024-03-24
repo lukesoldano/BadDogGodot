@@ -1,9 +1,13 @@
-[gd_scene load_steps=2 format=3 uid="uid://blibo1pljnepu"]
+[gd_scene load_steps=3 format=3 uid="uid://blibo1pljnepu"]
+
+[ext_resource type="Script" path="res://Actors/Static/level_exit_box.gd" id="1_fojdv"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_af6br"]
 size = Vector2(187, 105)
 
 [node name="LevelExitBox" type="Area2D"]
+collision_mask = 2
+script = ExtResource("1_fojdv")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_af6br")
@@ -13,3 +17,6 @@ offset_left = -92.0
 offset_top = -51.0
 offset_right = 93.0
 offset_bottom = 51.0
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_entered" from="." to="." method="_on_body_entereds"]

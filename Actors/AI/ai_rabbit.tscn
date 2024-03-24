@@ -13,9 +13,8 @@ radius = 285.063
 [sub_resource type="CircleShape2D" id="CircleShape2D_ibf38"]
 radius = 93.0215
 
-[node name="AiRabbit" type="CharacterBody2D" groups=["AI", "Rabbit"]]
-collision_layer = 2
-collision_mask = 3
+[node name="AiRabbit" type="CharacterBody2D" groups=["AI", "Consumable", "Rabbit"]]
+collision_layer = 4
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_4nagl")
@@ -33,20 +32,27 @@ shape = SubResource("RectangleShape2D_db3mx")
 debug_enabled = true
 
 [node name="WatchArea" type="Area2D" parent="."]
-collision_layer = 2
-collision_mask = 2
+collision_layer = 4
+collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WatchArea"]
 shape = SubResource("CircleShape2D_4giha")
 debug_color = Color(0.439216, 0.458824, 0.984314, 0.419608)
 
 [node name="EvadeArea" type="Area2D" parent="."]
-collision_layer = 2
-collision_mask = 2
+collision_layer = 4
+collision_mask = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EvadeArea"]
 shape = SubResource("CircleShape2D_ibf38")
 debug_color = Color(0.890196, 0.309804, 0.282353, 0.419608)
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_db3mx")
 
 [node name="SmAiRunner" parent="." instance=ExtResource("2_n47sm")]
 
@@ -61,5 +67,6 @@ one_shot = true
 [connection signal="body_exited" from="WatchArea" to="." method="_on_watch_area_body_exited"]
 [connection signal="body_entered" from="EvadeArea" to="." method="_on_evade_area_body_entered"]
 [connection signal="body_exited" from="EvadeArea" to="." method="_on_evade_area_body_exited"]
+[connection signal="body_entered" from="Hitbox" to="." method="_on_hitbox_body_entered"]
 [connection signal="timeout" from="IdleTimer" to="." method="_on_idle_timer_timeout"]
 [connection signal="timeout" from="WanderTimer" to="." method="_on_wander_timer_timeout"]
