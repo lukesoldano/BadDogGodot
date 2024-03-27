@@ -21,3 +21,6 @@ func _on_player_energy_updated(max_value: float, old_value: float, new_value: fl
    
 func _on_player_energy_state_updated(old_state: PlayerEnergy.EnergyState, new_state: PlayerEnergy.EnergyState) -> void:
    $EnergyBar.update_state(old_state, new_state)
+
+func _on_player_velocity_updated(max_velocity: float, _old_velocity: Vector2, current_velocity: Vector2) -> void:
+   $SpeedLabel.text = "(" + str(current_velocity.x).pad_decimals(1) + ", " + str(current_velocity.y).pad_decimals(1) + ") m/s (MAX: " + str(max_velocity).pad_decimals(1) + ")"

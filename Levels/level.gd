@@ -10,10 +10,20 @@ var level_exit_box: Node2D = null
 
 func set_player_one(player: Node2D) -> void:
    assert(player != null)
+   
    self.player_one = player
+   var player_one_energy: PlayerEnergy = self.player_one.get_node("PlayerEnergy")
+   
    self.player_one.connect("pause_requested", $PauseMenu._on_pause_requested)
-   self.player_one.connect("energy_updated", $HUD._on_player_energy_updated)
-   self.player_one.connect("energy_state_updated", $HUD._on_player_energy_state_updated)
+   
+   $HUD._on_player_velocity_updated(self.player_one.current_max_velocity, Vector2(0.0, 0.0), self.player_one.velocity)
+   self.player_one.connect("velocity_updated", $HUD._on_player_velocity_updated)
+   
+   $HUD._on_player_energy_updated(player_one_energy.max_energy, 0.0, player_one_energy.current_energy)
+   player_one_energy.connect("energy_updated", $HUD._on_player_energy_updated)
+
+   $HUD._on_player_energy_state_updated(PlayerEnergy.EnergyState.invalid, player_one_energy.current_energy_state)
+   player_one_energy.connect("energy_state_updated", $HUD._on_player_energy_state_updated)
    
 func set_exit_box(exit_box: Node2D) -> void:
    assert(exit_box != null)

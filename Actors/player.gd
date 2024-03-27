@@ -7,13 +7,17 @@ class_name Player
 # Signals
 signal pause_requested()
 
-signal energy_updated(max_energy: float, old_energy: float, new_energy: float)
-signal energy_state_updated(old_state: PlayerEnergy.EnergyState, new_state: PlayerEnergy.EnergyState)
+signal velocity_updated(current_max_velocity: float, old_velocity: Vector2, new_velocity: Vector2)
+
+# Constants
+const TIRED_MAX_VELOCITY_RATIO = 0.5
+const NORMAL_MAX_VELOCITY_RATIO = 0.6
+const HYPER_MAX_VELOCITY_RATIO = 0.7
+const ZOOMIE_MAX_VELOCITY_RATO = 1.0
 
 # Motion members
-@export var max_velocity: float = 300.0
+@export var max_velocity: float = 400.0
 var current_max_velocity: float = 100.0
-var ZOOMIN: bool = false
 
 @export var max_acceleration: float = 300.0
 var current_acceleration: float = 200.0
@@ -25,9 +29,7 @@ var current_acceleration: float = 200.0
 #var poop_scene = preload("res://Actors/Static/poop.tscn")
 
 func _ready():
-   self._on_energy_state_updated($PlayerEnergy.current_energy_state, $PlayerEnergy.current_energy_state)
-   
-   $PlayerEnergy.connect("energy_updated", self._on_energy_updated)
+   $PlayerEnergy.connect("zoomie_state_updated", self._on_zoomie_state_updated)
    $PlayerEnergy.connect("energy_state_updated", self._on_energy_state_updated)
 
 func toggle_enabled():
@@ -47,6 +49,8 @@ func __get_direction() -> Vector2:
    return Vector2(Input.get_axis("move_left", "move_right"), Input.get_axis("move_up", "move_down"))
    
 func __handle_movement_input(delta) -> void:
+   var old_velocity = self.velocity
+   
    var direction = __get_direction()
    if direction.length() > 0:
       if direction.x != 0:
@@ -82,6 +86,8 @@ func __handle_movement_input(delta) -> void:
       
    self.move_and_slide()
    
+   self.velocity_updated.emit(self.current_max_velocity, old_velocity, self.velocity)
+   
 # Handles user input to set position and animation frames
 func __handle_input(delta):
    
@@ -89,7 +95,7 @@ func __handle_input(delta):
       self.pause_requested.emit()
       
    if Input.is_action_just_pressed("sprint"):
-      if not $PlayerEnergy.toggle_zooming():
+      if not $PlayerEnergy.toggle_zoomies():
          print("*** INVALID ZOOM REQUESTED ***")
    
    ## Poops
@@ -112,23 +118,25 @@ func handle_ai_collision(body: Node2D, was_killed: bool):
 #func _on_poop_cooldown_timeout():
    #can_poop = true
    
-func _on_energy_updated(max_value: float, old_value: float, new_value: float):
-   self.energy_updated.emit(max_value, old_value, new_value)
+func _on_zoomie_state_updated(current_energy_state: PlayerEnergy.EnergyState, zoomies_enabled: bool):
+   if zoomies_enabled:
+      self.current_max_velocity = ZOOMIE_MAX_VELOCITY_RATO * self.max_velocity
+      self.velocity_updated.emit(self.current_max_velocity, Vector2(0.0, 0.0), self.velocity)
+   else:
+      self.__set_max_velocity_for_energy_state(current_energy_state)
    
-func _on_energy_state_updated(old_state: PlayerEnergy.EnergyState, new_state: PlayerEnergy.EnergyState):
-   const tired_max_velocity_ratio = 0.5
-   const normal_max_velocity_ratio = 0.6
-   const hyper_max_velocity_ratio = 0.7
+func _on_energy_state_updated(_old_state: PlayerEnergy.EnergyState, new_state: PlayerEnergy.EnergyState):
+   self.__set_max_velocity_for_energy_state(new_state)
    
-   match new_state:
+func __set_max_velocity_for_energy_state(state: PlayerEnergy.EnergyState):
+   match state:
       PlayerEnergy.EnergyState.tired:
-         self.current_max_velocity = tired_max_velocity_ratio * self.max_velocity
+         self.current_max_velocity = TIRED_MAX_VELOCITY_RATIO * self.max_velocity
       PlayerEnergy.EnergyState.normal:
-         self.current_max_velocity = normal_max_velocity_ratio * self.max_velocity
-         self.ZOOMIN = false
+         self.current_max_velocity = NORMAL_MAX_VELOCITY_RATIO * self.max_velocity
       PlayerEnergy.EnergyState.hyper:
-         self.current_max_velocity = hyper_max_velocity_ratio * self.max_velocity
+         self.current_max_velocity = HYPER_MAX_VELOCITY_RATIO * self.max_velocity
       _:
          assert(false, "Invalid energy state provided")
-   
-   self.energy_state_updated.emit(old_state, new_state)
+         
+   self.velocity_updated.emit(self.current_max_velocity, Vector2(0.0, 0.0), self.velocity)

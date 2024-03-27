@@ -13,6 +13,8 @@ enum EnergyState
 }
 
 # Signals
+signal zoomie_state_updated(zoomies_enabled: bool)
+
 signal energy_updated(max_value: float, old_value: float, new_value: float)
 signal energy_state_updated(old_state: EnergyState, new_state: EnergyState)
 
@@ -22,14 +24,14 @@ var normal_ratio_range: Types.NumericRange = Types.NumericRange.new(1.0/3.0, 2.0
 var hyper_ratio_range: Types.NumericRange = Types.NumericRange.new(2.0/3.0, 1.0)
 
 @export var periodic_energy_drain: float = 0.25
-@export var zooming_periodic_energy_drain: float = 1.25
+@export var zoomie_periodic_energy_drain: float = 1.25
 
 @export var max_energy: float = 200.0
 @export var current_energy: float = 100.0
-@export var current_energy_state: EnergyState = EnergyState.normal
+var current_energy_state: EnergyState = EnergyState.normal
 
 var current_periodic_energy_drain = self.periodic_energy_drain
-var ZOOMING: bool = false
+var zoomies_active: bool = false
 
 func _ready():
    assert(self.max_energy > self.current_energy)
@@ -38,25 +40,31 @@ func _ready():
    assert(self.normal_ratio_range.upper == self.hyper_ratio_range.lower)
    assert(self.hyper_ratio_range.upper == 1.0)
    
+   self.current_energy_state = self.__get_state_for_energy_ratio(self.current_energy/self.max_energy)
+   self.energy_state_updated.emit(EnergyState.invalid, self.current_energy_state)
+   
 func on_ai_eaten(body: Node2D) -> void:
    if body.is_in_group("Rabbit"):
       self.__update_energy(Constants.PointValues.Rabbit)
    
-func on_ai_collision(body: Node2D) -> void:
+func on_ai_collision(_body: Node2D) -> void:
    pass
    
-func toggle_zooming() -> bool:
-   if not self.ZOOMING:
+# Returns true if state successfully updated, false o/w
+func toggle_zoomies() -> bool:
+   if not self.zoomies_active:
       if self.current_energy_state != EnergyState.hyper:
          return false
       
-      self.ZOOMING = true
-      self.current_periodic_energy_drain = self.zooming_periodic_energy_drain
+      self.zoomies_active = true
+      self.current_periodic_energy_drain = self.zoomie_periodic_energy_drain
+      self.zoomie_state_updated.emit(self.current_energy_state, true)
       return true
       
    else:
-      self.ZOOMING = false
+      self.zoomies_active = false
       self.current_periodic_energy_drain = self.periodic_energy_drain
+      self.zoomie_state_updated.emit(self.current_energy_state, false)
       return true
    
 # Notify observers of new energy and update energy state if required
@@ -71,33 +79,15 @@ func __update_energy(energy_difference: float) -> void:
    self.energy_updated.emit(self.max_energy, old_energy, self.current_energy)
    
    var old_energy_state = self.current_energy_state
-   var new_energy_state = self.__get_state_for_energy(current_energy_ratio)
+   var new_energy_state = self.__get_state_for_energy_ratio(current_energy_ratio)
    
-   if new_energy_state != EnergyState.invalid and old_energy_state != new_energy_state:
+   if new_energy_state != EnergyState.invalid and old_energy_state != new_energy_state:         
       self.current_energy_state = new_energy_state
-      match old_energy_state:
-         EnergyState.tired:
-            match new_energy_state:
-               EnergyState.normal:
-                  self.energy_state_updated.emit(EnergyState.tired, EnergyState.normal)
-               EnergyState.hyper:
-                  self.energy_state_updated.emit(EnergyState.tired, EnergyState.hyper)
+      self.energy_state_updated.emit(old_energy_state, self.current_energy_state)
+      if self.zoomies_active and old_energy_state == EnergyState.hyper:
+         self.zoomie_state_updated.emit(self.current_energy_state, false)
                   
-         EnergyState.normal:
-            match new_energy_state:
-               EnergyState.tired:
-                  self.energy_state_updated.emit(EnergyState.normal, EnergyState.tired)
-               EnergyState.hyper:
-                  self.energy_state_updated.emit(EnergyState.normal, EnergyState.hyper)
-                  
-         EnergyState.hyper:
-            match new_energy_state:
-               EnergyState.tired:
-                  self.energy_state_updated.emit(EnergyState.hyper, EnergyState.tired)
-               EnergyState.normal:
-                  self.energy_state_updated.emit(EnergyState.hyper, EnergyState.normal)
-                  
-func __get_state_for_energy(energy_ratio: float) -> EnergyState:
+func __get_state_for_energy_ratio(energy_ratio: float) -> EnergyState:
    if self.tired_ratio_range.contains(energy_ratio):
       return EnergyState.tired
    elif self.normal_ratio_range.contains(energy_ratio):

@@ -24,9 +24,6 @@ position = Vector2(625, 298)
 
 [node name="Player" parent="." instance=ExtResource("1_cyiux")]
 position = Vector2(166, 152)
-max_velocity = null
-max_acceleration = null
-friction = null
 
 [node name="Bush" parent="." instance=ExtResource("7_wvjvj")]
 position = Vector2(430, -604)
